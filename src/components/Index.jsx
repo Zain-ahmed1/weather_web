@@ -1,7 +1,36 @@
-import React from "react";
-// import '../assets'
+import React, { useState } from "react";
+import axios from "axios";
+
 const Index = () => {
+  const [search,setSearch]= useState("");
+
+  const handleSearchInput = (e)=>{
+    setSearch(e.target.value)
+  }
+
   const weatherMP4 = ["Cloudy", "Rainny", "Snowy", "Sunny"];
+
+  const searchType = ()=>{
+   const options = {
+    method: "GET",
+    url: "http://api.weatherapi.com/v1/current.json",
+    params: {
+      key: "4fe2b0d6aaaa4c0d8ee65506232008",
+      q: search,
+      aqi: "yes",
+    },
+   };
+
+    axios
+    .request(options)
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+  }
+ 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
       <video
@@ -24,8 +53,10 @@ const Index = () => {
               placeholder="Search Location"
               type="text"
               className="bg-transparent outline-none border-b border-gray-200 h-8 w-[270px]"
+              onChange={(e)=>handleSearchInput(e)}
+              value={search}
             />
-            <button onClick={() => {}}>Search</button>
+            <button onClick={searchType}>Search</button>
           </div>
         </div>
       </div>
