@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import axios from "axios";
 
 const Index = () => {
@@ -9,8 +9,9 @@ const Index = () => {
   }
 
   const weatherMP4 = ["Cloudy", "Rainny", "Snowy", "Sunny"];
-
-  const searchType = ()=>{
+  const [Weather,setWeather] = useState({})
+  const searchType = async (req,res)=>{
+    const weatherData = new FormData()
    const options = {
     method: "GET",
     url: "http://api.weatherapi.com/v1/current.json",
@@ -20,17 +21,32 @@ const Index = () => {
       aqi: "yes",
     },
    };
+   try{
 
-    axios
-    .request(options)
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
+    const weather = await axios.request(options)
+    if(!weather){
+      return res.status(402).send({message:"Error"});
+    }
+    // Here i am making a new object which is later set in weather useState above and also string contry,city,etc are keys for that object
+    weatherData.append("country",weather.data.location.country)
+    weatherData.append("city",weather.data.location.region)
+    weatherData.append("tempC",weather.data.current.temp_c)
+    weatherData.append("weatherCondition",weather.data.current.condition.text)
+    weatherData.append("weatherIcon",weather.data.current.condition.icon)
+    weatherData.append("windSpeed",weather.data.wind_kph)
+    weatherData.append("humidity",weather.data.humidity)
+    setWeather(weatherData);
+
+    console.log(Weather)
+  }catch(err){
+    console.log(err)
   }
- 
+  }
+  useEffect(() => {
+    if (Object.keys(Weather).length > 0) {
+      console.log(Weather);
+    }
+  }, [Weather]);
   return (
     <div className="relative w-screen h-screen overflow-hidden">
       <video
