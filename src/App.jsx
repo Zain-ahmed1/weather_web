@@ -1,13 +1,12 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import "./App.css";
-import Index from "./components/Index";
+import Handle_data from "./components/Data_handle/Handle_data";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          <Route path={"/"} element={<Index />}/>
+          <Route path={"/"} element={<Handle_data />}/>
         </Routes>
       </BrowserRouter>
     </>
